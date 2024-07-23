@@ -27,40 +27,67 @@ def determine_winner(user_choice, computer_choice):
     else:
         return 'computer'
 
+def get_user_choice(choices):
+    """
+    Gets the user's choice from the terminal.
+    """
+    user_choice = input("Enter your move (rock, paper, scissors): ").lower()
+    while user_choice not in choices:
+        print("Invalid move. Please try again.")
+        user_choice = input("Enter your move (rock, paper, scissors): ").lower()
+    return user_choice
+
+def get_computer_choice(choices):
+    """
+    Randomly selects the computer's choice.
+    """
+    return random.choice(choices)
+
+def display_round_result(winner, user_choice, computer_choice):
+    """
+    Displays the result of a single round.
+    """
+    print(f"You chose: {user_choice}")
+    print(f"Computer chose: {computer_choice}")
+    if winner == 'tie':
+        print("It's a tie!")
+    elif winner == 'user':
+        print("You win!")
+    else:
+        print("Computer wins!")
+
+def display_final_score(score, rounds_played):
+    """
+    Displays the final score after the game ends.
+    """
+    print(f"Final score: User - {score['user']}, Computer - {score['computer']}, Rounds Played - {rounds_played}")
+
 def play_game():
     """
     Main function to play the rock-paper-scissors game.
-    Tracks scores and rounds, and asks the user if they want to play again after each round.
+    Refactored for better unit testability.
     """
     score = {'user': 0, 'computer': 0}
     choices = ['rock', 'paper', 'scissors']
     rounds_played = 0
 
     while True:
-        user_choice = input("Enter your move (rock, paper, scissors): ").lower()
-        if user_choice not in choices:
-            print("Invalid move. Please try again.")
-            continue
-
-        computer_choice = random.choice(choices)
-        print(f"You chose: {user_choice}")
-        print(f"Computer chose: {computer_choice}")
+        user_choice = get_user_choice(choices)
+        computer_choice = get_computer_choice(choices)
 
         winner = determine_winner(user_choice, computer_choice)
         rounds_played += 1
 
-        if winner == 'tie':
-            print("It's a tie!")
-        elif winner == 'user':
-            print("You win!")
+        display_round_result(winner, user_choice, computer_choice)
+
+        if winner == 'user':
             score['user'] += 1
-        else:
-            print("Computer wins!")
+        elif winner == 'computer':
             score['computer'] += 1
 
         play_again = input("Do you want to play again? (yes/no): ")
         if play_again.lower() != 'yes':
-            print(f"Final score: User - {score['user']}, Computer - {score['computer']}, Rounds Played - {rounds_played}")
+            display_final_score(score, rounds_played)
             break
 
 play_game()
