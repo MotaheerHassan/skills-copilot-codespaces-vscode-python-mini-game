@@ -90,4 +90,5 @@ def play_game():
             display_final_score(score, rounds_played)
             break
 
-play_game()
+if __name__ == '__main__':
+    play_game()
